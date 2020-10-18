@@ -1,0 +1,23 @@
+[33mcommit bd703b2337b2da67d10a513e576ec43f107b0f58[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Eduardo Monteiro <eduardormonteiro@gmail.com>
+Date:   Sat Oct 17 23:40:49 2020 -0300
+
+    SelectMapPosition initialized with user GPS position
+
+[33mcommit b6724ca62de4f90a3dd72385738621ea2e92bc50[m
+Author: Eduardo Monteiro <eduardormonteiro@gmail.com>
+Date:   Fri Oct 16 19:39:20 2020 -0300
+
+    finishing mobile project following NLW week
+
+[33mcommit 294b50e60efda0756b5f5540b0fc5286a02da728[m
+Author: Eduardo Monteiro <eduardormonteiro@gmail.com>
+Date:   Thu Oct 15 17:05:38 2020 -0300
+
+    first commit
+
+[33mcommit 08c0eb85d761a0479e20d358469a09877dfe0980[m
+Author: Eduardo Monteiro <eduardormonteiro@gmail.com>
+Date:   Thu Oct 15 11:56:11 2020 -0300
+
+    Created a new Expo app

@@ -1,11 +1,12 @@
-import React, { useState} from 'react'
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { useEffect, useState} from 'react'
+import { StyleSheet, Text, View, Dimensions, Alert } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
 import mapMarker from '../images/map-marker.png';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import {RectButton} from 'react-native-gesture-handler';
 import api from '../services/api';
+import * as Location from 'expo-location';
 
 interface Orphanage {
   id: number;
@@ -14,23 +15,45 @@ interface Orphanage {
   longitude: number;
 }
 
+export interface LocationProps {
+  coords: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 export default function OrphanagesMap(){
   const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
     const navigation = useNavigation();
+    const [location, setLocation] = useState<Location.LocationObject>();
 
-    //console.log(orphanages);
+    useEffect(() => {
+      (async () => {
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert("Permission to access location was denied");
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      })();
+    }, []);
 
     useFocusEffect(() => {
       api.get('orphanages').then( response => {
         setOrphanages(response.data);
       });
     });
-
+    // if (userPosition.latitude === 0){
+    //   return <View/>;
+    // }
     function handleNavigateToOrphanageDetails(id: number) {
         navigation.navigate('OrphanageDetails', { id })
     }
     function handleNavigateToCreateOrphanage() {
-      navigation.navigate('SelectMapPosition')
+      if (location) {
+        navigation.navigate("SelectMapPosition", { location });
+      }
+      return;
     }
     
 
@@ -40,8 +63,8 @@ export default function OrphanagesMap(){
           provider = {PROVIDER_GOOGLE} 
           style={styles.map} 
           initialRegion={{
-            latitude: -23.4963243,
-            longitude: -46.6222736,
+            latitude: location ? location.coords.latitude : -23.507147,
+            longitude: location ? location.coords.longitude : -46.6305992,
             latitudeDelta: 0.008,
             longitudeDelta: 0.008,
   
