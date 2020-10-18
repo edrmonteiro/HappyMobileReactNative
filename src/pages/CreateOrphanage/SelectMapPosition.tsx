@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
 import MapView, { MapEvent, Marker } from 'react-native-maps';
 
 import mapMarkerImg from '../../images/map-marker.png';
+import * as Location from 'expo-location';
 
 export default function SelectMapPosition() {
   const navigation = useNavigation();
   const [position, setPosition] = useState({latitude:0, longitude: 0});
+  const [userPosition, setUserPosition] = useState({latitude:0, longitude: 0});
 
+  useFocusEffect(() => {
+    async function handleInitialPosition() {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+          alert('Permission to access location was denied');
+      }
+      else { 
+          const gpsPosition = await Location.getCurrentPositionAsync({});
+          //console.log(gpsPosition);
+          setUserPosition({latitude:gpsPosition.coords.latitude, longitude: gpsPosition.coords.longitude});
+      }
+    } 
+    handleInitialPosition()
+
+  });
+  if (userPosition.latitude === 0){
+    return <View/>;
+  }
   function handleNextStep() {
     navigation.navigate('OrphanageData', {position});
   }
@@ -21,8 +41,10 @@ export default function SelectMapPosition() {
     <View style={styles.container}>
       <MapView 
         initialRegion={{
-          latitude: -27.2092052,
-          longitude: -49.6401092,
+          // latitude: -27.2092052,
+          // longitude: -49.6401092,
+          latitude: userPosition.latitude,
+          longitude: userPosition.longitude,
           latitudeDelta: 0.008,
           longitudeDelta: 0.008,
         }}
